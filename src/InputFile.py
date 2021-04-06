@@ -1,42 +1,35 @@
-def input(fileName, numNode, tabNama, tabKoor, tabAdj):
+def inputFile(fileName, numNode, tabNama, tabKoor, tabAdj):
     f = open("../test/" + fileName, "r")
     lines = f.readlines()
 
+    tabNama.clear()
+    tabKoor.clear()
+    tabKoor.clear()
+
     #menyimpan banyaknya simpul ke dalam numNode
-    numNode = int(lines[0])
+    numNodeNew = int(lines[0])
 
     #menyimpan data nama simpul ke dalam tabNama
-    tabNama = ['*' for i in range(numNode)]
-    for i in range(1,numNode+1):
-        tabNama[i-1] = lines[i]
-        tabNama[i-1]=tabNama[i-1].replace('\n','')
+    tabNamaNew = ['*' for i in range(numNodeNew)]
+    for i in range(1,numNodeNew+1):
+        tabNamaNew[i-1] = lines[i]
+        tabNamaNew[i-1] = tabNamaNew[i-1].replace('\n','')
 
     #menyimpan data koordinat ke dalam tabKoor
-    tabKoor = [[0.0 for j in range(2)] for i in range(numNode)]
-    for i in range(numNode+1,numNode*2+1):
+    tabKoorNew = [[0.0 for j in range(2)] for i in range(numNodeNew)]
+    for i in range(numNodeNew+1,numNodeNew*2+1):
         words = lines[i].split()
-        tabKoor[i-numNode-1][0] = float(words[0])
-        tabKoor[i-numNode-1][1] = float(words[1])
+        tabKoorNew[i-numNodeNew-1][0] = float(words[0])
+        tabKoorNew[i-numNodeNew-1][1] = float(words[1])
 
     #menyimpan data matriks ketetanggaan ke dalam tabAdj
-    tabAdj = [[False for j in range(numNode)] for i in range(numNode)]
-    for i in range(numNode*2+1, numNode*3+1):
+    tabAdjNew = [[False for j in range(numNodeNew)] for i in range(numNodeNew)]
+    for i in range(numNodeNew*2+1, numNodeNew*3+1):
         numbers = lines[i].split()
         for j in range(numNode):
             if numbers[j] == "1":
-                tabAdj[i-numNode*2-1][j] = True
+                tabAdjNew[i-numNodeNew*2-1][j] = True
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    tabNama += tabNamaNew
+    tabKoor += tabKoorNew
+    tabAdj += tabAdjNew
