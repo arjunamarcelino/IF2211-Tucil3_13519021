@@ -1,0 +1,150 @@
+import InputFile as i
+from copy import deepcopy
+
+tabNama = i.tabNama
+tabKoor = i.tabKoor
+tabAdj = i.tabAdj
+numNode = i.numNode
+
+#kelas yang merepresentasikan simpul dari graf
+class Node:
+    def __init__(self,idx,tabHn):
+        self.idx = idx                          #indeks dari simpul
+        self.name = findName(idx)               #nama simpul
+        self.track = "null"                     #nama-nama simpul yang dikunjungi sebelum simpul ini dikunjungi
+        self.f = 0                              #nilai f(n)
+        self.g = 0                              #nilai g(n)
+        self.h = tabHn[int(self.idx)]
+
+    #mengembalikan hasil copy dari node
+    def copy(self):
+        return deepcopy(self)
+
+    #menampilkan info dari node
+    def print(self):
+        print("Nama     : " + self.name)
+        print("Indeks   : " + str(self.idx))
+        print("Jejak    : " + self.track)
+        print("F(n)     : " + str(self.f))
+        print("G(n)     : " + str(self.g))
+        print("H(n)     : " + str(self.h) + '\n')
+
+    #mendapatkan indeks parent dari node
+    def getParent(self):
+        idxs = self.track.split()
+        return idxs[len(idxs) - 1]
+
+    #mendapatkan list indeks tetangga dari sebuah simpul node
+    def getListAdjIdx(self):
+        listAdj=[]
+        numNode = len(tabAdj[0])
+        for i in range(numNode):
+            if (tabAdj[int(self.idx)][i]):
+                if not self.isVisited(i):
+                    listAdj.append(i)
+        return listAdj
+
+    #mendapatkan list simpul tetangga dari sebuah simpul node
+    def getListAdjNode(self):
+        listAdj = self.getListAdjIdx()
+        listNode = self.getListNextNode(listAdj)
+        return listNode
+
+    #menambahkan indeks node ke dalam track dari simpul dan mengganti nama simpul dengan simpul selanjutnya
+    def nextNode(self, nextIdx):
+        temp = self.copy()
+        if temp.track == "null":
+            temp.track = str(temp.idx)
+        else:  # node.track != "null"
+            temp.track = temp.track + " " + str(temp.idx)
+        temp.idx = nextIdx
+        temp.name = findName(nextIdx)
+        temp.g += getEuclideanDistance(temp.getParent(), nextIdx)
+        temp.f = temp.g + temp.h
+        return temp
+
+    #mengembalikan list berisi Node yang merupakan hasil next dari simpul node terhadap indeks pada listIdx
+    def getListNextNode(self, listIdx):
+        listNode = []
+        for x in listIdx:
+            temp = deepcopy(self)
+            if temp.track == "null":
+                temp.track = str(temp.idx)
+            else:  #node.track != "null"
+                temp.track = temp.track + " " + str(temp.idx)
+            temp.idx = x
+            temp.name = findName(x)
+            temp.g += getEuclideanDistance(temp.getParent(), x)
+            temp.f = temp.g + temp.h
+            listNode.append(temp)
+        return listNode
+
+    def cleanListNode(self, listNode):
+        for node in listNode:
+            if node.f > self.f:
+                listNode.remove(node)
+
+    #mengecek apakah simpul pada checkIdx sudah dikunjungi oleh simpul node atau belum
+    def isVisited(self, checkIdx):
+        if self.track == "null":
+            return False
+        else:
+            idxs = self.track.split()
+            for i in range(len(idxs)):
+                if idxs[i] == str(checkIdx):
+                    return True
+            return False
+
+
+#mendapatkan nama dari simpul sesuai dengan indeksnya
+def findName(idx):
+    return tabNama[int(idx)]
+
+#mendapatkan indeks dari simpul sesuai dengan namanya
+def findIdx(name):
+    for i in range(len(tabNama)):
+        if tabNama[i]==name:
+            return i
+
+#mendapatkan jarak euclidean antara simpul start dan simpul goal
+def getEuclideanDistance(startIdx,goalIdx):
+    diffX = abs(tabKoor[int(goalIdx)][0] - tabKoor[int(startIdx)][0])
+    diffY = abs(tabKoor[int(goalIdx)][1] - tabKoor[int(startIdx)][1])
+    result = (diffX**2 + diffY**2)**0.5
+    #print("jarak dari " + str(startIdx) + " ke " + str(goalIdx) + " = " + str(result))
+    return(result)
+
+#mengisi tabHn dengan nilai heuristik yang dihitung berdasarkan jarak simpul ke simpul goal
+def generateHn(goalIdx, tabHn):
+    for nodeIdx in range(len(tabHn)):
+        tabHn[nodeIdx] = getEuclideanDistance(nodeIdx, goalIdx)
+
+#mendapatkan nilai g(n) dari simpul node
+def countGn(node):
+    if node.track == "null":
+        return 0
+    else:
+        idxs = node.track.split()
+        sum = getEuclideanDistance(node.idx, idxs[len(idxs)-1])
+        for i in range(len(idxs)-1,0,-1):
+            sum+=getEuclideanDistance(idxs[i],idxs[i-1])
+        return sum
+
+#mengembalikan indeks dari node dengan f(n) terkecil
+def getBestNodeIdx(listNode):
+    idxmin=0
+    min = listNode[0].f
+    for i in range(len(listNode)):
+        if min>listNode[i].f:
+            min=listNode[i].f
+            idxmin=i
+    return idxmin
+
+#mengembalikan indeks dari simpul goal pada listNode, mengembalikan -1 bila simpul goal tidak ditemukan
+def findGoalIdx(listNode, goalIdx):
+    for i in range(len(listNode)):
+        if int(listNode[i].idx) == int(goalIdx):
+            return i
+    #apabila tidak ditemukan
+    return -1
+
