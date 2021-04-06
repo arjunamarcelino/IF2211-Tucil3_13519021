@@ -81,7 +81,7 @@ class Node:
 
     def cleanListNode(self, listNode):
         for node in listNode:
-            if node.f > self.f:
+            if node.f >= self.f:
                 listNode.remove(node)
 
     #mengecek apakah simpul pada checkIdx sudah dikunjungi oleh simpul node atau belum
@@ -95,6 +95,15 @@ class Node:
                     return True
             return False
 
+    #memasukkan simpul apabila listNode kosong atau apabila simpul memiliki nilai f yang lebih kecil daripada elemen listNode
+    def appendCheck(self,listNode):
+        if len(listNode)== 0:
+            listNode.append(self)
+        else:
+            if self.f < listNode[0].f:
+                listNode.clear()
+                listNode.append(self)
+            #else: do nothing
 
 #mendapatkan nama dari simpul sesuai dengan indeksnya
 def findName(idx):
@@ -118,17 +127,6 @@ def getEuclideanDistance(startIdx,goalIdx):
 def generateHn(goalIdx, tabHn):
     for nodeIdx in range(len(tabHn)):
         tabHn[nodeIdx] = getEuclideanDistance(nodeIdx, goalIdx)
-
-#mendapatkan nilai g(n) dari simpul node
-def countGn(node):
-    if node.track == "null":
-        return 0
-    else:
-        idxs = node.track.split()
-        sum = getEuclideanDistance(node.idx, idxs[len(idxs)-1])
-        for i in range(len(idxs)-1,0,-1):
-            sum+=getEuclideanDistance(idxs[i],idxs[i-1])
-        return sum
 
 #mengembalikan indeks dari node dengan f(n) terkecil
 def getBestNodeIdx(listNode):
