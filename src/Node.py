@@ -132,7 +132,7 @@ def countGn(node):
 
 #mengembalikan indeks dari node dengan f(n) terkecil
 def getBestNodeIdx(listNode):
-    idxmin=0
+    idxmin = 0
     min = listNode[0].f
     for i in range(len(listNode)):
         if min>listNode[i].f:

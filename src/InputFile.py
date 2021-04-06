@@ -1,7 +1,7 @@
 #melakukan pembacaan file
 #filename = input("Masukkan nama file test: ")
 #f = open("../test/" + filename, "r")
-f = open("../test/testnyoba.txt","r")
+f = open("../test/test1.txt","r")
 lines = f.readlines()
 
 #menyimpan banyaknya simpul ke dalam numNode

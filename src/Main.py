@@ -18,18 +18,30 @@ def aStar(startIdx, goalIdx, initListHold, initListGoal,initCurrNode):
             idxBest = n.getBestNodeIdx(listGoal)
             return listGoal[idxBest]
 
-    listNode = currNode.getListAdjNode()
-    foundIdx = n.findGoalIdx(listNode,goalIdx)
+    listAdjNode = currNode.getListAdjNode()
+    if len(listAdjNode) == 0:
+        if len(listHold) > 0:
+            currNode = listHold[0].copy()
+            listHold.remove(listHold[0])
+            return aStar(startIdx, goalIdx, listHold, listGoal, currNode)
+        if len(listGoal) > 0:
+            idxBest = n.getBestNodeIdx(listGoal)
+            return listGoal[idxBest]
+
+        print("Solusi Tidak Ditemukan.")
+        return currNode
+
+    foundIdx = n.findGoalIdx(listAdjNode,goalIdx)
     if foundIdx == -1:
-        idxBest = n.getBestNodeIdx(listNode)
-        currNode = listNode[idxBest].copy()
-        del listNode[idxBest]
-        listHold += listNode
+        idxBest = n.getBestNodeIdx(listAdjNode)
+        currNode = listAdjNode[idxBest].copy()
+        del listAdjNode[idxBest]
+        listHold += listAdjNode
         return aStar(startIdx,goalIdx,listHold,listGoal,currNode)
     else:
-        tempNode = listNode[foundIdx].copy()
-        listNode.remove(listNode[foundIdx])
-        listHold += listNode
+        tempNode = listAdjNode[foundIdx].copy()
+        listAdjNode.remove(listAdjNode[foundIdx])
+        listHold += listAdjNode
         tempNode.cleanListNode(listHold)
         listGoal.append(tempNode)
         if (len(listHold) == 0):
