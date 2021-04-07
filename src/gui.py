@@ -1,4 +1,7 @@
 import tkinter as tk
+import matplotlib.pyplot as plt
+import networkx as nx
+
 import InputFile as i
 import Node as n
 import Main as m
@@ -61,11 +64,58 @@ def getSimpul(options, options2, start, finish, tabNama, tabKoor, tabAdj):
         tk.Label(master,
                  text="Jalur koneksi: " + str(resultNode.getRekamJejak(tabNama))).place(
             x=20, y=310)
+
+        tk.Label(master,
+                 text="Legenda : ").place(
+            x=20, y=350)
+
+        for i in range(len(tabNama)):
+            tk.Label(master,
+                    text=str(i) +" : " +str(tabNama[i])).place(
+                x=20, y=370+i*20)
+
+        jejak = resultNode.getListJejak()
+        
+        visualisasi(tabNama, tabKoor, tabAdj,jejak)
     else: #resultNode == -1
         tk.Label(master, 
          text="Solusi tidak ditemukan.").place(x=20,y=280)
         print("Solusi tidak ditemukan.")
     
+def visualisasi(tabNama, tabKoor, tabAdj, jejak) :
+    G = nx.Graph()
+
+    for i in range(len(tabNama)):
+        G.add_node(i,pos=(tabKoor[i][0],tabKoor[i][1]))
+
+    for i in range(len(tabNama)):
+        for j in range(len(tabNama)):
+            if (tabAdj[i][j]):
+                G.add_edge(i,j,color='b')
+
+    G.add_edge(0,1,color='r')
+    pos = nx.get_node_attributes(G,'pos')
+
+    labels ={}
+    for i in range(len(tabNama)) :
+        labels[i] = i
+
+    colors = [G[u][v]['color'] for u,v in G.edges()]
+    nx.draw_networkx_nodes(G,pos,node_size=500)
+    nx.draw_networkx_edges(G,pos,edgelist=G.edges(),edge_color='black')
+    nx.draw_networkx_labels(G,pos,labels,font_size=16)
+
+    for i in range(len(jejak)-1):
+        nx.draw_networkx_edges(
+            G,
+            pos,
+            edgelist=[(jejak[i],jejak[i+1])],
+            width=8,
+            alpha=0.5,
+            edge_color="r",)
+
+
+    plt.show()
     
 
 # Inisiasi Variabel

@@ -1,5 +1,5 @@
 def inputFile(fileName, numNode, tabNama, tabKoor, tabAdj):
-    f = open("test/" + fileName, "r")
+    f = open("../test/" + fileName, "r")
     lines = f.readlines()
 
     tabAdj.clear()
