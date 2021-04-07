@@ -28,6 +28,30 @@ class Node:
         idxs = self.track.split()
         return idxs[len(idxs) - 1]
 
+    #mendapatkan string berupa urutan nama-nama dari simpul yang telah dilewati hingga mencapai simpul yang sekarang
+    def getRekamJejak(self,tabNama):
+        if self.track == "null":
+            return "Tidak ada rekam jejak"
+        ancestors = self.track.split()
+        jejak = ""
+        i = 0
+        while i < len(ancestors):
+            jejak += findName(int(ancestors[i]),tabNama) + " -> "
+            i+=1
+        jejak += self.name
+        return jejak
+
+    #mendapatkan list indeks dari urutan simpul yang telah dilewati hingga mencapai simpul yang sekarang
+    def getListJejak(self):
+        if self.track == "null":
+            return []
+        ancestors = self.track.split()
+        listJejak = []
+        for x in ancestors:
+            listJejak.append(int(x))
+        listJejak.append(self.idx)
+        return listJejak
+
     #mendapatkan list indeks tetangga dari sebuah simpul node
     def getListAdjIdx(self,tabAdj):
         listAdj=[]
@@ -139,4 +163,3 @@ def findGoalIdx(listNode, goalIdx):
             return i
     #apabila tidak ditemukan
     return -1
-

@@ -54,17 +54,22 @@ def getSimpul(options, options2, start, finish, tabNama, tabKoor, tabAdj):
 
     if resultNode != -1:
         resultNode.print()
-        tk.Label(master, 
-         text="Jarak antara "+start+" dengan "+ finish +" adalah : "+str(resultNode.f)+" km").place(x=20,y=280)
+        print(resultNode.getRekamJejak(tabNama))
+        print(resultNode.getListJejak())
+        tk.Label(master,
+              text="Jarak antara "+start+"dengan "+ finish +" adalah: "+str(resultNode.f)+" km").place(x=20,y=280)
+        tk.Label(master,
+                 text="Jalur koneksi: " + str(resultNode.getRekamJejak(tabNama))).place(
+            x=20, y=310)
     else: #resultNode == -1
         tk.Label(master, 
-         text="Solusi tidak ditemukan").place(x=20,y=280)
-        print("Solusi tidak ditemukan")
+         text="Solusi tidak ditemukan.").place(x=20,y=280)
+        print("Solusi tidak ditemukan.")
     
     
 
 # Inisiasi Variabel
-fileName = "" 
+fileName = ""
 numNode = 0 
 tabNama = [] 
 tabKoor = []
