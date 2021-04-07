@@ -1,4 +1,4 @@
-# IF2211-Tucil3_13519021
+# IF2211-Tucil3: Penuntunmu
 > Implementasi Algoritma A* untuk Menentukan Lintasan Terpendek
 
 ## Info General 
@@ -15,7 +15,7 @@ Python versi 3.9+
 `pip3 install matplotlib`
 `pip3 install networkx`
 `pip3 install tkinter`
-`python3 gui.py` 
+`python3 Main.py` 
 * Masukkan nama file test lengkap dengan extensinya (.txt), pastikan nama file sesuai dengan nama file yang terdapat pada folder test
 * Tekan submit
 * Pilih simpul start dan simpul finish
