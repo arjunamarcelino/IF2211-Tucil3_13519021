@@ -1,6 +1,6 @@
 import Node as n
 
-def aStar(startIdx, goalIdx, initListHold, initListGoal,initCurrNode):
+def aStar(startIdx, goalIdx, initListHold, initListGoal,initCurrNode, tabAdj,tabNama,tabKoor):
     listHold = initListHold.copy()      #menyimpan list simpul yang masih berpotensi untuk menghasilkan solusi terbaik
     listGoal = initListGoal.copy()      #menyimpan simpul goal terbaik apabila ditemukan (list dengan maks 1 elemen)
     currNode = initCurrNode.copy()      #menyimpan simpul yang saat ini sedang diperiksa
@@ -11,14 +11,14 @@ def aStar(startIdx, goalIdx, initListHold, initListGoal,initCurrNode):
         return currNode
 
     #melanjutkan pemeriksaan terhadap simpul-simpul tetangga dari currNode
-    listAdjNode = currNode.getListAdjNode()
+    listAdjNode = currNode.getListAdjNode(tabAdj,tabNama,tabKoor)
     if len(listAdjNode) == 0:
 
         #apabila tidak ditemukan simpul tetangga, pemeriksaan dilakukan terhadap simpul yang di-hold
         if len(listHold) > 0:
             currNode = listHold[0].copy()
             listHold.remove(listHold[0])
-            return aStar(startIdx, goalIdx, listHold, listGoal, currNode)
+            return aStar(startIdx, goalIdx, listHold, listGoal, currNode,tabAdj,tabNama,tabKoor)
 
         #apabila tidak ditemukan simpul tetangga dan simpul yang di-hold, mengembalikan elemen pertama listGoal
         if len(listGoal) > 0:
@@ -35,7 +35,7 @@ def aStar(startIdx, goalIdx, initListHold, initListGoal,initCurrNode):
         currNode = listAdjNode[idxBest].copy()
         del listAdjNode[idxBest]
         listHold += listAdjNode
-        return aStar(startIdx,goalIdx,listHold,listGoal,currNode)
+        return aStar(startIdx,goalIdx,listHold,listGoal,currNode,tabAdj,tabNama,tabKoor)
 
     else:
         #simpul goal ditemukan
@@ -59,24 +59,4 @@ def aStar(startIdx, goalIdx, initListHold, initListGoal,initCurrNode):
             #apabila masih ada, dilakukan pemeriksaan terhadap elemen pertama listHold
             currNode = listHold[0].copy()
             listHold.remove(listHold[0])
-            return aStar(startIdx,goalIdx,listHold,listGoal,currNode)
-
-
-if __name__ == '__main__':
-    numNode = n.numNode
-    #menerima input dari pengguna
-    startIdx = input("Masukkan indeks simpul awal (" + str(0) + "-" + str(numNode-1) + "): ")
-    goalIdx = input("Masukkan indeks simpul tujuan(" + str(0) + "-" + str(numNode-1) + "): ")
-
-    #men-generate nilai h(n) berdasarkan simpul goal
-    tabHn = [0 for i in range(numNode)]
-    n.generateHn(goalIdx, tabHn)
-
-    #memulai pencarian jalur terpendek menggunakan algoritma A*
-    startNode = n.Node(startIdx, tabHn)
-    resultNode = aStar(startIdx, goalIdx, [], [], startNode)
-
-    if resultNode != -1:
-        resultNode.print()
-    else: #resultNode == -1
-        print("Solusi tidak ditemukan")
+            return aStar(startIdx,goalIdx,listHold,listGoal,currNode,tabAdj,tabNama,tabKoor)

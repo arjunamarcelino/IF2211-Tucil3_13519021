@@ -1,9 +1,9 @@
 def inputFile(fileName, numNode, tabNama, tabKoor, tabAdj):
-    f = open("../test/" + fileName, "r")
+    f = open("test/" + fileName, "r")
     lines = f.readlines()
 
+    tabAdj.clear()
     tabNama.clear()
-    tabKoor.clear()
     tabKoor.clear()
 
     #menyimpan banyaknya simpul ke dalam numNode
@@ -26,7 +26,7 @@ def inputFile(fileName, numNode, tabNama, tabKoor, tabAdj):
     tabAdjNew = [[False for j in range(numNodeNew)] for i in range(numNodeNew)]
     for i in range(numNodeNew*2+1, numNodeNew*3+1):
         numbers = lines[i].split()
-        for j in range(numNode):
+        for j in range(numNodeNew):
             if numbers[j] == "1":
                 tabAdjNew[i-numNodeNew*2-1][j] = True
 
